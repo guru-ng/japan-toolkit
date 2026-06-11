@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Postal Code Lookup — Japan Toolkit</title>
+    <link rel="icon" href="/japan-toolkit/favicon.svg" type="image/svg+xml" />
+    <script type="module" src="/src/postal-lookup/main.ts"></script>
+  </head>
+  <body>
+    <main>
+      <h1>Postal Code Lookup</h1>
+      <p class="page-subtitle">
+        Enter a Japanese postal code (〒) to look up its address.
+        Powered by the free <a href="https://zipcloud.ibsnet.co.jp" target="_blank" rel="noopener">ZipCloud API</a>.
+        All fields are editable so you can fix or extend the result.
+      </p>
+
+      <div class="card">
+        <form id="lookup-form">
+          <div class="form-group">
+            <label for="zipcode">Postal code (郵便番号)</label>
+            <div style="display:flex;gap:0.5rem;align-items:center">
+              <span style="font-size:1.1rem;color:var(--color-text-muted)">〒</span>
+              <input
+                type="text"
+                id="zipcode"
+                placeholder="123-4567"
+                maxlength="8"
+                inputmode="numeric"
+                autocomplete="postal-code"
+                style="max-width:180px"
+              />
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="lookup-btn">
+            Search
+          </button>
+          <span id="spinner" style="display:none;margin-left:0.5rem;color:var(--color-text-muted)">⏳</span>
+        </form>
+        <p class="error-msg" id="lookup-error"></p>
+      </div>
+
+      <div id="result-section" class="hidden" style="margin-top:1rem">
+        <p id="result-count" style="font-size:0.875rem;color:var(--color-text-muted);margin-bottom:0.75rem"></p>
+        <div id="result-cards"></div>
+        <p style="font-size:0.78rem;color:var(--color-text-muted);margin-top:0.75rem">
+          Fields are editable — correct or extend the address as needed before copying.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

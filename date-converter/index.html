@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Era Date Converter — Japan Toolkit</title>
+    <link rel="icon" href="/japan-toolkit/favicon.svg" type="image/svg+xml" />
+    <script type="module" src="/src/date-converter/main.ts"></script>
+  </head>
+  <body>
+    <main>
+      <h1>Era Date Converter</h1>
+      <p class="page-subtitle">
+        Convert between Gregorian and Japanese imperial era dates.
+        Covers Meiji (1868) through current Reiwa era.
+      </p>
+
+      <!-- Gregorian → Era -->
+      <div class="card">
+        <h2>Gregorian → Japanese Era</h2>
+        <div class="form-group">
+          <label for="g-date">Gregorian date</label>
+          <input type="date" id="g-date" min="1868-01-25" />
+        </div>
+        <button class="btn btn-primary" id="g-convert">Convert</button>
+        <p class="error-msg" id="g-error"></p>
+        <div class="result-block hidden" id="g-result">
+          <div class="result-label">Japanese era date</div>
+          <div class="result-value" id="g-result-value"></div>
+          <div class="result-sub" id="g-result-intl" style="display:none"></div>
+        </div>
+      </div>
+
+      <div class="section-divider">or</div>
+
+      <!-- Era → Gregorian -->
+      <div class="card">
+        <h2>Japanese Era → Gregorian</h2>
+        <div class="form-group">
+          <label for="e-era">Era</label>
+          <select id="e-era"></select>
+        </div>
+        <div class="input-row">
+          <div class="form-group">
+            <label for="e-year">Era year</label>
+            <input type="number" id="e-year" min="1" placeholder="e.g. 6" />
+          </div>
+          <div class="form-group">
+            <label for="e-month">Month</label>
+            <input type="number" id="e-month" min="1" max="12" placeholder="1–12" />
+          </div>
+          <div class="form-group">
+            <label for="e-day">Day</label>
+            <input type="number" id="e-day" min="1" max="31" placeholder="1–31" />
+          </div>
+        </div>
+        <button class="btn btn-primary" id="e-convert">Convert</button>
+        <p class="error-msg" id="e-error"></p>
+        <div class="result-block hidden" id="e-result">
+          <div class="result-label">Gregorian date</div>
+          <div class="result-value" id="e-result-value"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1.5rem;font-size:0.85rem;color:var(--color-text-muted)">
+        <strong>Era boundaries used:</strong>
+        Meiji 1868-01-25, Taisho 1912-07-30, Showa 1926-12-25, Heisei 1989-01-08, Reiwa 2019-05-01.
+        Conversion logic is a manual TypeScript table — see <code>src/date-converter/era-logic.ts</code>.
+      </div>
+    </main>
+  </body>
+</html>

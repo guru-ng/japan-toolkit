@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PR Points Calculator — Japan Toolkit</title>
+    <link rel="icon" href="/japan-toolkit/favicon.svg" type="image/svg+xml" />
+    <script type="module" src="/src/pr-calculator/main.ts"></script>
+    <style>
+      .category-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+      .category-tabs button {
+        padding: 0.45rem 1rem;
+        border-radius: var(--radius);
+        border: 1px solid var(--color-border);
+        background: var(--color-surface);
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s, border-color 0.15s;
+      }
+      .category-tabs button.active {
+        background: var(--color-accent);
+        color: white;
+        border-color: var(--color-accent);
+      }
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .checkbox-group input[type="checkbox"] {
+        width: 1rem;
+        height: 1rem;
+        accent-color: var(--color-accent);
+        flex-shrink: 0;
+      }
+      .checkbox-group label {
+        margin-bottom: 0;
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+      .form-cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      @media (max-width: 560px) {
+        .form-cols { grid-template-columns: 1fr; }
+      }
+      .todo-note {
+        font-size: 0.8rem;
+        color: var(--color-warning);
+        background: #fff8e1;
+        border: 1px solid #ffe082;
+        border-radius: var(--radius);
+        padding: 0.6rem 0.9rem;
+        margin-bottom: 1.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>PR Points Calculator</h1>
+      <p class="page-subtitle">
+        Estimate your Highly Skilled Foreign Professional (高度専門職) score for Japan Permanent Residency.
+        70+ points = eligible after 3 years; 80+ points = fast-track after 1 year.
+      </p>
+
+      <div class="todo-note">
+        ⚠️ Point values are approximate scaffolding — official ISA values to be verified and filled in.
+        Do not use for real immigration decisions.
+      </div>
+
+      <!-- Score display (sticky live total) -->
+      <div class="score-display" id="score-display">
+        <div class="score-number" id="score-number">0</div>
+        <div class="score-label">points</div>
+        <div class="score-status" id="score-status">Fill in your details below</div>
+      </div>
+
+      <!-- Category selection -->
+      <div class="category-tabs">
+        <button data-category="academic">Academic Research</button>
+        <button data-category="technical" class="active">Specialized / Technical</button>
+        <button data-category="business">Business Management</button>
+      </div>
+
+      <!-- Form -->
+      <div class="card">
+        <h2>Academic Background</h2>
+        <div class="form-cols">
+          <div class="form-group">
+            <label for="academic-degree">Highest degree</label>
+            <select id="academic-degree">
+              <option value="none">None / High school</option>
+              <option value="bachelor">Bachelor's degree</option>
+              <option value="master">Master's degree</option>
+              <option value="doctor">Doctorate (PhD)</option>
+            </select>
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:0.1rem">
+            <div class="checkbox-group">
+              <input type="checkbox" id="dual-degree" />
+              <label for="dual-degree">Holds 2+ university degrees (+5)</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Career & Salary</h2>
+        <div class="form-cols">
+          <div class="form-group">
+            <label for="career-years">Years of relevant experience</label>
+            <input type="number" id="career-years" min="0" max="50" placeholder="e.g. 7" />
+          </div>
+          <div class="form-group">
+            <label for="salary">Annual salary (JPY)</label>
+            <input type="number" id="salary" min="0" step="100000" placeholder="e.g. 7000000" />
+          </div>
+          <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" min="18" max="80" placeholder="e.g. 32" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Japanese Language</h2>
+        <div class="form-group" style="max-width:320px">
+          <label for="japanese-level">Qualification</label>
+          <select id="japanese-level">
+            <option value="none">None / Below N2</option>
+            <option value="jlpt_n2">JLPT N2</option>
+            <option value="jlpt_n1">JLPT N1</option>
+            <option value="bjt_480">BJT 480+ (Business Japanese)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card" id="academic-section">
+        <h2>Research Achievements</h2>
+        <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:1rem">Applies to Academic Research and Specialized/Technical categories.</p>
+        <div class="form-cols">
+          <div class="form-group">
+            <label for="patents">Number of patents (inventor)</label>
+            <input type="number" id="patents" min="0" placeholder="0" />
+          </div>
+          <div class="form-group">
+            <label for="publications">Peer-reviewed publications</label>
+            <input type="number" id="publications" min="0" placeholder="0" />
+          </div>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="conducted-research" />
+          <label for="conducted-research">Led publicly funded or commended research</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Bonus Items</h2>
+        <div style="display:grid;gap:0.5rem">
+          <div class="checkbox-group">
+            <input type="checkbox" id="grad-jp-univ" />
+            <label for="grad-jp-univ">Graduated from a Japanese university (+10)</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="worked-japan" />
+            <label for="worked-japan">10+ years continuous employment in Japan (+10)</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="certified-sme" />
+            <label for="certified-sme">SME management certification (+10)</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="growth-field" />
+            <label for="growth-field">Working in a designated growth field (digital/green) (+10)</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="investment" />
+            <label for="investment">Invested 100M+ JPY in Japan (Business Management only) (+10)</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Points breakdown -->
+      <div class="card" style="margin-top:1rem">
+        <h2>Points Breakdown</h2>
+        <div class="points-breakdown" id="breakdown-body"></div>
+      </div>
+    </main>
+  </body>
+</html>
