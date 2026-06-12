@@ -1,8 +1,11 @@
 import '../shared/style.css'
 import { renderNav } from '../shared/nav.ts'
+import { renderFooter } from '../shared/footer.ts'
+import { copyText } from '../shared/clipboard.ts'
 import { lookupPostalCode, type ZipResult } from './zipcloud.ts'
 
 renderNav(`${import.meta.env.BASE_URL}postal-lookup/`)
+renderFooter()
 
 const form = document.getElementById('lookup-form') as HTMLFormElement
 const zipcodeInput = document.getElementById('zipcode') as HTMLInputElement
@@ -40,7 +43,14 @@ function clearError(): void {
 function buildAddressCard(r: ZipResult, idx: number): string {
   return `
     <div class="card" style="margin-top:${idx > 0 ? '0.75rem' : '0'}">
-      <div class="address-fields">
+      <div class="card-header">
+        <span class="result-label">Address ${idx + 1}</span>
+        <button type="button" class="copy-btn" data-copy-idx="${idx}" aria-label="Copy address" title="Copy address">
+          <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
+          <span class="copy-btn-label">Copy</span>
+        </button>
+      </div>
+      <div class="address-fields" style="margin-top:0">
         <div class="form-group" style="margin-bottom:0">
           <label for="addr-prefecture-${idx}">Prefecture / 都道府県</label>
           <input type="text" id="addr-prefecture-${idx}" value="${r.address1}" />
@@ -59,6 +69,14 @@ function buildAddressCard(r: ZipResult, idx: number): string {
       </div>
     </div>
   `
+}
+
+function copyAddress(idx: number, btn: HTMLButtonElement): void {
+  const prefecture = (document.getElementById(`addr-prefecture-${idx}`) as HTMLInputElement)?.value ?? ''
+  const city = (document.getElementById(`addr-city-${idx}`) as HTMLInputElement)?.value ?? ''
+  const town = (document.getElementById(`addr-town-${idx}`) as HTMLInputElement)?.value ?? ''
+  const address = [prefecture, city, town].filter(Boolean).join('')
+  void copyText(address, btn)
 }
 
 async function handleLookup(): Promise<void> {
@@ -89,4 +107,12 @@ async function handleLookup(): Promise<void> {
 form.addEventListener('submit', (e) => {
   e.preventDefault()
   void handleLookup()
+})
+
+// Event delegation for per-card copy buttons (cards are re-rendered on each search)
+resultCards.addEventListener('click', (e) => {
+  const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.copy-btn[data-copy-idx]')
+  if (!btn) return
+  const idx = parseInt(btn.dataset['copyIdx'] ?? '', 10)
+  if (!isNaN(idx)) copyAddress(idx, btn)
 })

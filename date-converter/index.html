@@ -4,7 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Era Date Converter — Japan Toolkit</title>
+    <meta name="description" content="Convert dates between the Gregorian calendar and Japanese imperial eras (Reiwa, Heisei, Showa, Taisho, Meiji) — free, instant era date converter with cross-checked results." />
+    <meta property="og:title" content="Era Date Converter — Japan Toolkit" />
+    <meta property="og:description" content="Convert between Gregorian dates and Japanese imperial era dates (Meiji through Reiwa)." />
+    <meta property="og:type" content="website" />
     <link rel="icon" href="/japan-toolkit/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet" />
+    <!-- Google AdSense: uncomment once approved and replace ca-pub-XXXXXXXXXXXXXXXX with your publisher ID
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+    -->
     <script type="module" src="/src/date-converter/main.ts"></script>
   </head>
   <body>
@@ -25,7 +35,13 @@
         <button class="btn btn-primary" id="g-convert">Convert</button>
         <p class="error-msg" id="g-error"></p>
         <div class="result-block hidden" id="g-result">
-          <div class="result-label">Japanese era date</div>
+          <div class="result-header">
+            <div class="result-label">Japanese era date</div>
+            <button type="button" class="copy-btn" id="g-copy" aria-label="Copy result" title="Copy result">
+              <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
+              <span class="copy-btn-label">Copy</span>
+            </button>
+          </div>
           <div class="result-value" id="g-result-value"></div>
           <div class="result-sub" id="g-result-intl" style="display:none"></div>
         </div>
@@ -57,7 +73,13 @@
         <button class="btn btn-primary" id="e-convert">Convert</button>
         <p class="error-msg" id="e-error"></p>
         <div class="result-block hidden" id="e-result">
-          <div class="result-label">Gregorian date</div>
+          <div class="result-header">
+            <div class="result-label">Gregorian date</div>
+            <button type="button" class="copy-btn" id="e-copy" aria-label="Copy result" title="Copy result">
+              <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
+              <span class="copy-btn-label">Copy</span>
+            </button>
+          </div>
           <div class="result-value" id="e-result-value"></div>
         </div>
       </div>
@@ -67,6 +89,9 @@
         Meiji 1868-01-25, Taisho 1912-07-30, Showa 1926-12-25, Heisei 1989-01-08, Reiwa 2019-05-01.
         Conversion logic is a manual TypeScript table — see <code>src/date-converter/era-logic.ts</code>.
       </div>
+
+      <!-- Ad placeholder: replace with <ins class="adsbygoogle"> once AdSense is approved -->
+      <div class="ad-slot" aria-hidden="true">Advertisement</div>
     </main>
   </body>
 </html>

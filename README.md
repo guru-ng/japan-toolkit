@@ -49,6 +49,7 @@ japan-toolkit/
 ├── date-converter/index.html  # Vite MPA entry pages
 ├── postal-lookup/index.html
 ├── pr-calculator/index.html
+├── privacy-policy/index.html
 ├── index.html
 ├── vite.config.ts
 └── .github/workflows/deploy.yml
@@ -62,8 +63,31 @@ japan-toolkit/
 
 The `base: '/japan-toolkit/'` in `vite.config.ts` matches the project-page URL `https://guru-ng.github.io/japan-toolkit/`.
 
+> **Note for Netlify:** if this same repo is also deployed to Netlify and served from a root domain (not a `/japan-toolkit/` subpath), the `base: '/japan-toolkit/'` setting will make all built asset paths 404, because Vite prefixes every script/CSS path with `/japan-toolkit/`. If that's happening, the fix is to make `base` conditional, e.g. `base: process.env.DEPLOY_TARGET === 'netlify' ? '/' : '/japan-toolkit/'`, and set `DEPLOY_TARGET=netlify` in the Netlify build environment. This hasn't been changed yet — confirm before applying so it doesn't break the GitHub Pages build.
+
+## Managing Netlify usage
+
+Netlify's 2026 pricing is credit-based. The free tier includes **300 credits/month**, and each **production deploy costs 15 credits** — so roughly 20 deploys/month uses the whole allowance. Bandwidth (20 credits/GB) and any serverless/background functions (10 credits/GB-hour) also draw from the same pool, but for a static site like this, deploy count is usually the biggest factor.
+
+If credit usage is climbing fast, it's almost always from frequent pushes triggering auto-deploys. Options:
+- Batch changes into fewer commits/pushes rather than deploying after every small edit.
+- Use **deploy previews** for branches and only deploy to production (push to `main`) when ready.
+- Temporarily pause auto-publishing in **Site settings → Build & deploy → Stop builds** while iterating locally, then resume before the final push.
+- Check current usage under **Team settings → Billing → Usage** in the Netlify UI.
+
+## Setting up Google AdSense (beginner checklist)
+
+1. **Have a live site with original content** — this site now has SEO meta descriptions on every page plus a `/privacy-policy/` page, which AdSense expects.
+2. Apply at [adsense.google.com](https://www.adsense.google.com/) with the site's live URL.
+3. Once approved, Google gives you a publisher ID (`ca-pub-XXXXXXXXXXXXXXXX`):
+   - Uncomment the AdSense `<script>` tag in the `<head>` of each page (`index.html`, `date-converter/index.html`, `postal-lookup/index.html`, `pr-calculator/index.html`, `privacy-policy/index.html`) and replace `ca-pub-XXXXXXXXXXXXXXXX` with your ID.
+   - Add an `ads.txt` file at the site root containing: `google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0`.
+4. Each page has a `.ad-slot` placeholder `<div>` where an ad unit can go — replace it with the `<ins class="adsbygoogle">` snippet AdSense provides for each ad unit.
+5. Re-deploy after adding the script and `ads.txt` — AdSense will start showing ads once the site passes its review.
+
 ## Notes
 
 - **PR Calculator:** Scoring data sourced from official ISA/MOJ ministerial ordinances (retrieved June 2026): ordinance 930001658, special addition notice 930001665, official points table 001398882. See `src/pr-calculator/scoring.ts` for citations. Do not rely on any calculator for real immigration decisions — verify directly with ISA.
 - **Era logic:** The Gregorian↔era conversion uses a manual boundary table in `src/date-converter/era-logic.ts`, cross-checked at runtime against `Intl.DateTimeFormat` with the Japanese calendar.
 - **ZipCloud:** Free, no API key required, CORS-enabled. Returns Japanese and kana address components.
+- **Privacy policy:** `/privacy-policy/` covers cookie/ad usage for AdSense compliance — update it if analytics or ad providers change.

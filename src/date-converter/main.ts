@@ -1,5 +1,7 @@
 import '../shared/style.css'
 import { renderNav } from '../shared/nav.ts'
+import { renderFooter } from '../shared/footer.ts'
+import { copyText } from '../shared/clipboard.ts'
 import {
   ERAS,
   gregorianToEra,
@@ -10,6 +12,7 @@ import {
 } from './era-logic.ts'
 
 renderNav(`${import.meta.env.BASE_URL}date-converter/`)
+renderFooter()
 
 // ── Gregorian → Era section ──────────────────────────────────────────────────
 
@@ -19,6 +22,7 @@ const gResult = document.getElementById('g-result') as HTMLDivElement
 const gResultValue = document.getElementById('g-result-value') as HTMLElement
 const gResultIntl = document.getElementById('g-result-intl') as HTMLElement
 const gError = document.getElementById('g-error') as HTMLElement
+const gCopyBtn = document.getElementById('g-copy') as HTMLButtonElement
 
 gConvertBtn.addEventListener('click', () => {
   const val = gDateInput.value // "YYYY-MM-DD"
@@ -58,6 +62,10 @@ gDateInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') gConvertBtn.click()
 })
 
+gCopyBtn.addEventListener('click', () => {
+  void copyText(gResultValue.textContent ?? '', gCopyBtn)
+})
+
 // ── Era → Gregorian section ──────────────────────────────────────────────────
 
 const eEraSelect = document.getElementById('e-era') as HTMLSelectElement
@@ -68,6 +76,7 @@ const eConvertBtn = document.getElementById('e-convert') as HTMLButtonElement
 const eResult = document.getElementById('e-result') as HTMLDivElement
 const eResultValue = document.getElementById('e-result-value') as HTMLElement
 const eError = document.getElementById('e-error') as HTMLElement
+const eCopyBtn = document.getElementById('e-copy') as HTMLButtonElement
 
 // Populate era select options
 ERAS.forEach((era) => {
@@ -112,4 +121,8 @@ eConvertBtn.addEventListener('click', () => {
   inp.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') eConvertBtn.click()
   })
+})
+
+eCopyBtn.addEventListener('click', () => {
+  void copyText(eResultValue.textContent ?? '', eCopyBtn)
 })

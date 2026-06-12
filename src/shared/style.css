@@ -53,8 +53,10 @@ body {
   margin: 0 auto;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  height: 56px;
+  min-height: 56px;
+  padding: 0.5rem 0;
 }
 
 .nav-brand {
@@ -64,6 +66,7 @@ body {
   text-decoration: none;
   margin-right: 1rem;
   letter-spacing: -0.01em;
+  flex-shrink: 0;
 }
 
 .nav-links {
@@ -71,14 +74,17 @@ body {
   gap: 0.25rem;
   list-style: none;
   flex-wrap: wrap;
+  flex: 1;
 }
 
 .nav-links a {
+  display: block;
   text-decoration: none;
   color: var(--color-text-muted);
   font-size: 0.875rem;
   padding: 0.375rem 0.75rem;
   border-radius: var(--radius);
+  white-space: nowrap;
   transition: background 0.15s, color 0.15s;
 }
 
@@ -231,6 +237,94 @@ button {
   display: none;
 }
 
+/* Generic utility: hides any element regardless of other classes */
+.hidden {
+  display: none !important;
+}
+
+/* ── Material icons ── */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1.25rem;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/* ── Copy buttons ──
+   Styled like .btn-primary (the Convert button) so they read as a clear,
+   clickable action rather than a faint icon-only control. */
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.4rem 0.75rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  flex-shrink: 0;
+}
+
+.copy-btn .material-symbols-outlined {
+  font-size: 1.05rem;
+}
+
+.copy-btn:hover {
+  background: var(--color-accent-dark);
+}
+
+.copy-btn:active {
+  transform: translateY(1px);
+}
+
+.copy-btn.copied {
+  background: var(--color-success);
+}
+
+/* Header row used inside result blocks / cards to pair a label with a copy button */
+.result-header,
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.card-header {
+  margin-bottom: 0.5rem;
+}
+
+.result-header .result-label,
+.card-header .result-label {
+  margin-bottom: 0;
+}
+
 .result-label {
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -310,9 +404,19 @@ button {
 }
 
 .tool-icon {
-  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
   margin-bottom: 0.75rem;
-  display: block;
+  border-radius: var(--radius);
+  background: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+.tool-icon .material-symbols-outlined {
+  font-size: 1.5rem;
 }
 
 .tool-card h2 {
@@ -328,6 +432,7 @@ button {
 
 /* ── PR Calculator specific ── */
 .score-display {
+  position: relative;
   text-align: center;
   padding: 1.5rem;
   background: var(--color-surface);
@@ -335,6 +440,12 @@ button {
   border-radius: var(--radius);
   margin-bottom: 1rem;
   transition: border-color 0.3s;
+}
+
+.score-copy {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
 }
 
 .score-display.eligible {
@@ -413,6 +524,96 @@ button {
 @media (max-width: 600px) {
   h1 { font-size: 1.4rem; }
   main { padding: 1.25rem 1rem; }
-  .nav-inner { height: 48px; }
   .score-number { font-size: 2.75rem; }
+
+  .site-nav { padding: 0 1rem; }
+
+  .nav-inner {
+    min-height: 48px;
+    padding: 0.5rem 0;
+  }
+
+  .nav-brand {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .nav-links {
+    flex: 1 1 100%;
+    flex-wrap: nowrap;
+    gap: 0.125rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-links a {
+    font-size: 0.8125rem;
+    padding: 0.35rem 0.625rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .nav-links a {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.5rem;
+  }
+}
+
+/* ── Footer ── */
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  margin-top: 2rem;
+}
+
+.footer-inner {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.footer-inner a {
+  color: var(--color-text-muted);
+  text-decoration: underline;
+}
+
+.footer-inner a:hover {
+  color: var(--color-accent);
+}
+
+/* ── Ad placeholder slots ── */
+.ad-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 90px;
+  margin: 1.5rem 0;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 600px) {
+  .footer-inner {
+    padding: 1.25rem 1rem;
+    justify-content: center;
+    text-align: center;
+  }
 }

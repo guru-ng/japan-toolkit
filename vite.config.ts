@@ -10,6 +10,7 @@ export default defineConfig({
         'date-converter': resolve(__dirname, 'date-converter/index.html'),
         'postal-lookup': resolve(__dirname, 'postal-lookup/index.html'),
         'pr-calculator': resolve(__dirname, 'pr-calculator/index.html'),
+        'privacy-policy': resolve(__dirname, 'privacy-policy/index.html'),
       },
     },
   },

@@ -1,14 +1,18 @@
 import '../shared/style.css'
 import { renderNav } from '../shared/nav.ts'
+import { renderFooter } from '../shared/footer.ts'
+import { copyText } from '../shared/clipboard.ts'
 import {
   calculateScore,
   type FormValues,
   type Category,
   type DegreeType,
   type PositionType,
+  type ScoreResult,
 } from './scoring.ts'
 
 renderNav(`${import.meta.env.BASE_URL}pr-calculator/`)
+renderFooter()
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -130,9 +134,31 @@ const scoreDisplay = el('score-display')
 const breakdownBody = el('breakdown-body')
 const gateWarning  = el('gate-warning')
 const gateMsg      = el('gate-msg')
+const scoreCopyBtn = el<HTMLButtonElement>('score-copy')
+
+let lastResult: ScoreResult | null = null
+
+function formatResultForCopy(result: ScoreResult): string {
+  const lines = [
+    `Japan HSP PR Points: ${result.total} pts`,
+    result.statusLabel,
+    '',
+    ...result.breakdown.map((b) => {
+      const pts = b.points > 0 ? `+${b.points}` : String(b.points)
+      return `${b.label}: ${pts}`
+    }),
+  ]
+  return lines.join('\n')
+}
+
+scoreCopyBtn.addEventListener('click', () => {
+  if (!lastResult) return
+  void copyText(formatResultForCopy(lastResult), scoreCopyBtn)
+})
 
 function recalculate(): void {
   const result = calculateScore(readForm())
+  lastResult = result
 
   scoreNumber.textContent = String(result.total)
 

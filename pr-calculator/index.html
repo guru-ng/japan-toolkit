@@ -4,7 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PR Points Calculator — Japan Toolkit</title>
+    <meta name="description" content="Free Japan Highly Skilled Professional (HSP) points calculator. Estimate your score across academic, technical, and business categories toward permanent residency eligibility." />
+    <meta property="og:title" content="HSP PR Points Calculator — Japan Toolkit" />
+    <meta property="og:description" content="Estimate your Highly Skilled Foreign Professional points toward Japan Permanent Residency." />
+    <meta property="og:type" content="website" />
     <link rel="icon" href="/japan-toolkit/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet" />
+    <!-- Google AdSense: uncomment once approved and replace ca-pub-XXXXXXXXXXXXXXXX with your publisher ID
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+    -->
     <script type="module" src="/src/pr-calculator/main.ts"></script>
     <style>
       .category-tabs {
@@ -64,6 +74,16 @@
         margin-top: 0.75rem;
       }
       .score-display.gate-fail { border-color: var(--color-error); }
+      .gate-warning {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+      }
+      .gate-warning .material-symbols-outlined {
+        font-size: 1.05rem;
+        color: var(--color-warning);
+      }
       .bonus-group-label {
         font-size: 0.7rem;
         text-transform: uppercase;
@@ -121,11 +141,15 @@
 
       <!-- Live score display -->
       <div class="score-display" id="score-display">
+        <button type="button" class="copy-btn score-copy" id="score-copy" aria-label="Copy score summary" title="Copy score summary">
+          <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
+          <span class="copy-btn-label">Copy</span>
+        </button>
         <div class="score-number" id="score-number">0</div>
         <div class="score-label">points</div>
         <div class="score-status" id="score-status">Select a category and fill in your details</div>
         <div class="gate-warning" id="gate-warning" style="display:none">
-          ⚠ <span id="gate-msg"></span>
+          <span class="material-symbols-outlined" aria-hidden="true">warning</span> <span id="gate-msg"></span>
         </div>
       </div>
 
@@ -393,6 +417,9 @@
         <a href="https://www.moj.go.jp/isa/applications/status/skilled.html" target="_blank" rel="noopener">MOJ HSP overview</a><br>
         <strong>This tool is for reference only. Verify directly with ISA before making immigration decisions.</strong>
       </p>
+
+      <!-- Ad placeholder: replace with <ins class="adsbygoogle"> once AdSense is approved -->
+      <div class="ad-slot" aria-hidden="true">Advertisement</div>
     </main>
   </body>
 </html>
