@@ -2,7 +2,7 @@
 
 A small static site with three utilities for life in Japan, built with vanilla TypeScript + HTML + CSS and Vite.
 
-**Live site:** `https://izaki1994.github.io/japan-toolkit/`
+**Live site:** `https://guru-ng.github.io/japan-toolkit/`
 
 ## Tools
 
@@ -56,14 +56,14 @@ japan-toolkit/
 
 ## Deploying to GitHub Pages
 
-1. Push this repo to GitHub as `japan-toolkit` under your account.
+1. Push this repo to `github.com/guru-ng/japan-toolkit`.
 2. Go to **Settings → Pages** and set the source to **GitHub Actions**.
 3. Push to `main` — the workflow in `.github/workflows/deploy.yml` builds and deploys automatically.
 
-The `base: '/japan-toolkit/'` in `vite.config.ts` ensures all asset paths are correct for the project-page URL.
+The `base: '/japan-toolkit/'` in `vite.config.ts` matches the project-page URL `https://guru-ng.github.io/japan-toolkit/`.
 
 ## Notes
 
-- **PR Calculator:** Point values in `src/pr-calculator/scoring.ts` are marked `[VERIFY]` and need to be confirmed against the official ISA scoring tables before use. Do not rely on them for real immigration decisions.
+- **PR Calculator:** Scoring data sourced from official ISA/MOJ ministerial ordinances (retrieved June 2026): ordinance 930001658, special addition notice 930001665, official points table 001398882. See `src/pr-calculator/scoring.ts` for citations. Do not rely on any calculator for real immigration decisions — verify directly with ISA.
 - **Era logic:** The Gregorian↔era conversion uses a manual boundary table in `src/date-converter/era-logic.ts`, cross-checked at runtime against `Intl.DateTimeFormat` with the Japanese calendar.
 - **ZipCloud:** Free, no API key required, CORS-enabled. Returns Japanese and kana address components.

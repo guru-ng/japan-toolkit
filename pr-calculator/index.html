@@ -31,13 +31,14 @@
       }
       .checkbox-group {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 0.5rem;
         margin-bottom: 0.5rem;
       }
       .checkbox-group input[type="checkbox"] {
         width: 1rem;
         height: 1rem;
+        margin-top: 0.2rem;
         accent-color: var(--color-accent);
         flex-shrink: 0;
       }
@@ -45,156 +46,353 @@
         margin-bottom: 0;
         font-size: 0.9rem;
         cursor: pointer;
+        line-height: 1.4;
       }
       .form-cols {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
       }
-      @media (max-width: 560px) {
-        .form-cols { grid-template-columns: 1fr; }
-      }
-      .todo-note {
-        font-size: 0.8rem;
-        color: var(--color-warning);
-        background: #fff8e1;
-        border: 1px solid #ffe082;
+      @media (max-width: 560px) { .form-cols { grid-template-columns: 1fr; } }
+      .gate-warning {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
         border-radius: var(--radius);
         padding: 0.6rem 0.9rem;
-        margin-bottom: 1.25rem;
+        font-size: 0.85rem;
+        color: #856404;
+        margin-top: 0.75rem;
       }
+      .score-display.gate-fail { border-color: var(--color-error); }
+      .bonus-group-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--color-text-muted);
+        font-weight: 600;
+        margin: 1rem 0 0.4rem;
+        padding-bottom: 0.25rem;
+        border-bottom: 1px solid var(--color-border);
+      }
+      .bonus-group-label:first-child { margin-top: 0; }
+      .pts-badge {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        background: var(--color-accent-light);
+        color: var(--color-accent);
+        border-radius: 4px;
+        padding: 0 0.35rem;
+        margin-left: 0.25rem;
+        vertical-align: middle;
+      }
+      .breakdown-label { font-size: 0.82rem; color: var(--color-text-muted); }
+      .bonus-note {
+        font-size: 0.78rem;
+        color: var(--color-text-muted);
+        margin: 0.15rem 0 0.4rem 1.5rem;
+        line-height: 1.35;
+      }
+      .citation {
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+        margin-top: 1.5rem;
+        line-height: 1.6;
+      }
+      .citation a { color: var(--color-accent); }
+      .qual-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.5rem;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+      .qual-row label { margin-bottom: 0; font-size: 0.9rem; }
+      .qual-row select { width: auto; min-width: 120px; }
     </style>
   </head>
   <body>
     <main>
       <h1>PR Points Calculator</h1>
       <p class="page-subtitle">
-        Estimate your Highly Skilled Foreign Professional (高度専門職) score for Japan Permanent Residency.
-        70+ points = eligible after 3 years; 80+ points = fast-track after 1 year.
+        Highly Skilled Foreign Professional (高度専門職1号) score estimator for Japan Permanent Residency.
+        Requires ≥70 pts for HSP status; PR fast-track at 80 pts (1 yr) or 70 pts (3 yrs) of HSP residence.
       </p>
 
-      <div class="todo-note">
-        ⚠️ Point values are approximate scaffolding — official ISA values to be verified and filled in.
-        Do not use for real immigration decisions.
-      </div>
-
-      <!-- Score display (sticky live total) -->
+      <!-- Live score display -->
       <div class="score-display" id="score-display">
         <div class="score-number" id="score-number">0</div>
         <div class="score-label">points</div>
-        <div class="score-status" id="score-status">Fill in your details below</div>
+        <div class="score-status" id="score-status">Select a category and fill in your details</div>
+        <div class="gate-warning" id="gate-warning" style="display:none">
+          ⚠ <span id="gate-msg"></span>
+        </div>
       </div>
 
-      <!-- Category selection -->
+      <!-- Category tabs -->
       <div class="category-tabs">
-        <button data-category="academic">Academic Research</button>
-        <button data-category="technical" class="active">Specialized / Technical</button>
-        <button data-category="business">Business Management</button>
+        <button data-category="academic">(a) Academic Research</button>
+        <button data-category="technical" class="active">(b) Specialized / Technical</button>
+        <button data-category="business">(c) Business Management</button>
       </div>
 
-      <!-- Form -->
+      <!-- ── Academic Background ── -->
       <div class="card">
         <h2>Academic Background</h2>
         <div class="form-cols">
           <div class="form-group">
-            <label for="academic-degree">Highest degree</label>
-            <select id="academic-degree">
+            <label for="degree">Highest degree</label>
+            <select id="degree">
               <option value="none">None / High school</option>
-              <option value="bachelor">Bachelor's degree</option>
-              <option value="master">Master's degree</option>
-              <option value="doctor">Doctorate (PhD)</option>
+              <option value="bachelor">Bachelor's degree — 学士</option>
+              <option value="master">Master's / professional degree — 修士・専門職学位</option>
+              <option value="mba_mot">MBA or MOT — 経営管理修士・技術経営修士</option>
+              <option value="doctor">Doctoral degree — 博士</option>
             </select>
+            <p id="degree-hint-b" class="bonus-note" style="display:none">
+              (b): MBA/MOT = 25 pts; Doctorate = 30 pts; Master's = 20 pts
+            </p>
+            <p id="degree-hint-c" class="bonus-note" style="display:none">
+              (c): MBA/MOT = 25 pts; Doctorate or Master's = 20 pts; Bachelor's = 10 pts
+            </p>
+            <p id="degree-hint-a" class="bonus-note" style="display:none">
+              (a): Doctorate = 30 pts; Master's/MBA/MOT = 20 pts; Bachelor's = 10 pts
+            </p>
           </div>
-          <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:0.1rem">
+          <div class="form-group" style="display:flex;align-items:flex-start;padding-top:1.6rem">
             <div class="checkbox-group">
               <input type="checkbox" id="dual-degree" />
-              <label for="dual-degree">Holds 2+ university degrees (+5)</label>
+              <label for="dual-degree">Holds degrees in 2+ different academic fields <span class="pts-badge">+5</span></label>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- ── Career ── -->
       <div class="card">
-        <h2>Career & Salary</h2>
+        <h2>Professional Career</h2>
         <div class="form-cols">
           <div class="form-group">
-            <label for="career-years">Years of relevant experience</label>
+            <label for="career-years">Years of relevant professional experience</label>
             <input type="number" id="career-years" min="0" max="50" placeholder="e.g. 7" />
           </div>
-          <div class="form-group">
-            <label for="salary">Annual salary (JPY)</label>
-            <input type="number" id="salary" min="0" step="100000" placeholder="e.g. 7000000" />
-          </div>
-          <div class="form-group">
-            <label for="age">Age</label>
+        </div>
+        <p class="bonus-note" style="margin-left:0">
+          (a): 3 yr=5, 5 yr=10, 7+ yr=15 &nbsp;|&nbsp;
+          (b): 3 yr=5, 5 yr=10, 7 yr=15, 10+ yr=20 &nbsp;|&nbsp;
+          (c): 3 yr=10, 5 yr=15, 7 yr=20, 10+ yr=25
+        </p>
+      </div>
+
+      <!-- ── Salary ── -->
+      <div class="card">
+        <h2>Annual Salary</h2>
+        <div class="form-group" style="max-width:320px">
+          <label for="salary">Annual salary (JPY / 年収)</label>
+          <input type="number" id="salary" min="0" step="100000" placeholder="e.g. 7000000" />
+        </div>
+        <p id="salary-hint-matrix" class="bonus-note" style="margin-left:0">
+          (a)/(b): points come from the salary × age matrix — enter age below too.
+          Categories (b)/(c) require a minimum of ¥3,000,000.
+        </p>
+        <p id="salary-hint-flat" class="bonus-note" style="margin-left:0;display:none">
+          (c) flat table: ≥¥10M=10, ≥¥15M=20, ≥¥20M=30, ≥¥25M=40, ≥¥30M=50.
+          Minimum ¥3,000,000 required.
+        </p>
+      </div>
+
+      <!-- ── Age (a/b only) ── -->
+      <div id="section-age">
+        <div class="card">
+          <h2>Age</h2>
+          <div class="form-group" style="max-width:180px">
+            <label for="age">Age (years)</label>
             <input type="number" id="age" min="18" max="80" placeholder="e.g. 32" />
           </div>
+          <p class="bonus-note" style="margin-left:0">
+            Scored separately from salary: &lt;30=15, 30–34=10, 35–39=5, 40+=0.
+            Age also adjusts the salary matrix — some cells become 0 at 35–39 or 40+.
+          </p>
         </div>
       </div>
 
+      <!-- ── Research Achievements (a/b only) ── -->
+      <div id="section-research">
+        <div class="card">
+          <h2>Research Achievements</h2>
+          <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:1rem">
+            (a): 2+ qualifying items = 25 pts &nbsp;|&nbsp; 1 item = 20 pts<br>
+            (b): any 1 qualifying item = 15 pts (flat)
+          </p>
+          <div style="display:grid;gap:0.4rem">
+            <div class="checkbox-group">
+              <input type="checkbox" id="research-patent" />
+              <label for="research-patent">Named inventor on ≥1 patent</label>
+            </div>
+            <div class="checkbox-group">
+              <input type="checkbox" id="research-govt" />
+              <label for="research-govt">Led research endorsed or funded by a government body</label>
+            </div>
+            <div class="checkbox-group">
+              <input type="checkbox" id="research-papers" />
+              <label for="research-papers">Published peer-reviewed academic papers</label>
+            </div>
+            <div class="checkbox-group">
+              <input type="checkbox" id="research-award" />
+              <label for="research-award">Received commendation or award for research contributions</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Qualifications (b only) ── -->
+      <div id="section-qualifications" style="display:none">
+        <div class="card">
+          <h2>Japanese Qualifications</h2>
+          <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:1rem">
+            Any one category at 2+, <em>or</em> two distinct categories at 1+ = <strong>10 pts</strong>.
+            One item in any single category = <strong>5 pts</strong>.
+          </p>
+          <div class="qual-row">
+            <label for="qual-national">Relevant Japanese national qualifications (国家資格)</label>
+            <select id="qual-national">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2+</option>
+            </select>
+          </div>
+          <div class="qual-row">
+            <label for="qual-itexam">Designated IT engineer exams passed (情報処理技術者試験等)</label>
+            <select id="qual-itexam">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2+</option>
+            </select>
+          </div>
+          <div class="qual-row">
+            <label for="qual-itcert">Designated IT certifications held</label>
+            <select id="qual-itcert">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2+</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Position (c only) ── -->
+      <div id="section-position" style="display:none">
+        <div class="card">
+          <h2>Position / Role</h2>
+          <div class="form-group" style="max-width:360px">
+            <label for="position">Current position in the company</label>
+            <select id="position">
+              <option value="none">Not applicable / other</option>
+              <option value="director">Director or Executive Officer — 取締役・執行役 (+5)</option>
+              <option value="rep_director">Representative Director or Executive Officer — 代表取締役等 (+10)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Special Addition Bonuses ── -->
       <div class="card">
-        <h2>Japanese Language</h2>
-        <div class="form-group" style="max-width:320px">
-          <label for="japanese-level">Qualification</label>
-          <select id="japanese-level">
-            <option value="none">None / Below N2</option>
-            <option value="jlpt_n2">JLPT N2</option>
-            <option value="jlpt_n1">JLPT N1</option>
-            <option value="bjt_480">BJT 480+ (Business Japanese)</option>
+        <h2>Special Addition Bonuses</h2>
+        <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:1rem">
+          All 12 items stack additively. Items marked with category restrictions are hidden when not applicable.
+        </p>
+
+        <div class="bonus-group-label">Employer / Workplace</div>
+
+        <div class="form-group" style="max-width:480px;margin-bottom:0.75rem">
+          <label for="employer-innovation">Employer innovation status</label>
+          <select id="employer-innovation">
+            <option value="none">None</option>
+            <option value="sme">SME with innovation-promotion certification — 中小企業イノベ認定 (+20)</option>
+            <option value="non_sme">Innovation-promotion certification, non-SME (+10)</option>
           </select>
+          <p class="bonus-note">#1 and #2 are mutually exclusive — select whichever applies.</p>
         </div>
-      </div>
 
-      <div class="card" id="academic-section">
-        <h2>Research Achievements</h2>
-        <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:1rem">Applies to Academic Research and Specialized/Technical categories.</p>
-        <div class="form-cols">
-          <div class="form-group">
-            <label for="patents">Number of patents (inventor)</label>
-            <input type="number" id="patents" min="0" placeholder="0" />
-          </div>
-          <div class="form-group">
-            <label for="publications">Peer-reviewed publications</label>
-            <input type="number" id="publications" min="0" placeholder="0" />
-          </div>
-        </div>
         <div class="checkbox-group">
-          <input type="checkbox" id="conducted-research" />
-          <label for="conducted-research">Led publicly funded or commended research</label>
+          <input type="checkbox" id="bonus-sme-rd" />
+          <label for="bonus-sme-rd">Employer (SME) R&amp;D expense ratio &gt;3% of revenue <span class="pts-badge">+5</span> (#3)</label>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="bonus-growth" />
+          <label for="bonus-growth">Advanced project in MOJ-recognized growth field <span class="pts-badge">+10</span> (#8)</label>
+        </div>
+
+        <div class="bonus-group-label">Personal Qualifications &amp; Awards</div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="bonus-foreign-qual" />
+          <label for="bonus-foreign-qual">Foreign qualification, award, or specialized knowledge contributing to innovation <span class="pts-badge">+5</span> (#4)</label>
+        </div>
+
+        <div class="bonus-group-label">Education / Japanese Language</div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="bonus-jp-univ" />
+          <label for="bonus-jp-univ">Graduate of a Japanese university (or completed Japanese graduate program) <span class="pts-badge">+10</span> (#5)</label>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="bonus-desig-univ" />
+          <label for="bonus-desig-univ">Graduate of a MOJ-designated university <span class="pts-badge">+10</span> (#9)<br>
+            <span style="font-size:0.78rem;color:var(--color-text-muted)">(QS/THE/ARWU top-300, MEXT Super Global Univ, or MOFA Innovative Asia partner)</span>
+          </label>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="bonus-n1" />
+          <label for="bonus-n1">JLPT N1 &nbsp;/&nbsp; majored in Japanese at a foreign university &nbsp;/&nbsp; BJT ≥480 <span class="pts-badge">+15</span> (#6)</label>
+        </div>
+
+        <div id="bonus-n2-row" class="checkbox-group">
+          <input type="checkbox" id="bonus-n2" />
+          <label for="bonus-n2">JLPT N2 &nbsp;/&nbsp; BJT ≥400 <span class="pts-badge">+10</span> (#7)
+            <span id="bonus-n2-excluded-note" style="display:none;font-size:0.78rem;color:var(--color-text-muted)">
+              — excluded because #5 or #6 is already counted
+            </span>
+          </label>
+        </div>
+        <p class="bonus-note">#7 is excluded if #5 or #6 applies. #5 and #6 can stack (+25 combined).</p>
+
+        <div class="bonus-group-label">Training &amp; Sector</div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="bonus-training" />
+          <label for="bonus-training">Completed a designated training programme <span class="pts-badge">+5</span> (#10)</label>
+        </div>
+
+        <div id="bonus-financial-row" class="checkbox-group">
+          <input type="checkbox" id="bonus-financial" />
+          <label for="bonus-financial">Work experience in investment management / financial sector in Japan <span class="pts-badge">+10</span> (#11)</label>
+        </div>
+
+        <div id="bonus-selfinvest-row" class="checkbox-group" style="display:none">
+          <input type="checkbox" id="bonus-selfinvest" />
+          <label for="bonus-selfinvest">Self-invested ≥¥100,000,000 in own business <span class="pts-badge">+5</span> (#12)</label>
         </div>
       </div>
 
+      <!-- ── Points Breakdown ── -->
       <div class="card">
-        <h2>Bonus Items</h2>
-        <div style="display:grid;gap:0.5rem">
-          <div class="checkbox-group">
-            <input type="checkbox" id="grad-jp-univ" />
-            <label for="grad-jp-univ">Graduated from a Japanese university (+10)</label>
-          </div>
-          <div class="checkbox-group">
-            <input type="checkbox" id="worked-japan" />
-            <label for="worked-japan">10+ years continuous employment in Japan (+10)</label>
-          </div>
-          <div class="checkbox-group">
-            <input type="checkbox" id="certified-sme" />
-            <label for="certified-sme">SME management certification (+10)</label>
-          </div>
-          <div class="checkbox-group">
-            <input type="checkbox" id="growth-field" />
-            <label for="growth-field">Working in a designated growth field (digital/green) (+10)</label>
-          </div>
-          <div class="checkbox-group">
-            <input type="checkbox" id="investment" />
-            <label for="investment">Invested 100M+ JPY in Japan (Business Management only) (+10)</label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Points breakdown -->
-      <div class="card" style="margin-top:1rem">
         <h2>Points Breakdown</h2>
         <div class="points-breakdown" id="breakdown-body"></div>
       </div>
+
+      <!-- ── Citation ── -->
+      <p class="citation">
+        Source: Immigration Services Agency of Japan (ISA) / Ministry of Justice official ordinances —
+        930001658, special addition notice 930001665, points table 001398882 (retrieved June 2026).<br>
+        <a href="https://www.isa.go.jp/en/publications/materials/nyuukokukanri07_00149.html" target="_blank" rel="noopener">ISA official points table</a>
+        &nbsp;|&nbsp;
+        <a href="https://www.moj.go.jp/isa/applications/status/skilled.html" target="_blank" rel="noopener">MOJ HSP overview</a><br>
+        <strong>This tool is for reference only. Verify directly with ISA before making immigration decisions.</strong>
+      </p>
     </main>
   </body>
 </html>
