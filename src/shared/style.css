@@ -566,30 +566,35 @@ button {
   }
 }
 
-/* ── Footer ── */
-.site-footer {
-  position: relative;
-  overflow: hidden;
-  border-top: 1px solid var(--color-border);
-  margin-top: 2rem;
-}
-
-/* Faded flat-vector scene behind the footer content (see footer.ts) */
-.footer-art {
-  position: absolute;
+/* ── Page background art ──
+   Flat-vector scene (see footer.ts) fixed behind the whole page, anchored to
+   the bottom of the viewport, faded so content stays readable. */
+.page-art {
+  position: fixed;
   inset: 0;
+  z-index: -1;
   opacity: 0.2;
   pointer-events: none;
 }
 
-.footer-art svg {
+.page-art svg {
   display: block;
   width: 100%;
   height: 100%;
 }
 
+/* Per-page background tints matching each tool/guide accent tone */
+body.theme-teal { background: #eef5f3; }
+body.theme-mustard { background: #f8f3e6; }
+body.theme-pink { background: #faf0ef; }
+
+/* ── Footer ── */
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  margin-top: 2rem;
+}
+
 .footer-inner {
-  position: relative;
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
@@ -799,25 +804,3 @@ button {
   text-decoration: underline;
 }
 
-/* ── Homepage hero banner (inline flat-vector SVG) ── */
-.hero {
-  position: relative;
-  margin: 0.5rem 0 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: linear-gradient(180deg, #fdfbf7 0%, #f6efe4 100%);
-  box-shadow: var(--shadow);
-}
-
-.hero svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-@media (max-width: 600px) {
-  .hero {
-    margin-top: 0.25rem;
-  }
-}
