@@ -10,6 +10,7 @@ const links: NavLink[] = [
   { href: `${BASE}date-converter/`, label: 'Era Converter' },
   { href: `${BASE}postal-lookup/`, label: 'Postal Lookup' },
   { href: `${BASE}pr-calculator/`, label: 'PR Calculator' },
+  { href: `${BASE}guides/`, label: 'Guides' },
 ]
 
 export function renderNav(activePath: string): void {

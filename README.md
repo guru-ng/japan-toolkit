@@ -12,6 +12,16 @@ A small static site with three utilities for life in Japan, built with vanilla T
 | Postal Code Lookup | `/postal-lookup/` | 7-digit postal code → prefecture/city/town via ZipCloud API |
 | PR Points Calculator | `/pr-calculator/` | HSP point score estimator for Japan Permanent Residency |
 
+## Guides
+
+SEO-friendly explainer articles under `/guides/`, each cross-linking to its companion tool:
+
+| Guide | Path |
+|---|---|
+| How Japanese Era Dates Work | `/guides/japanese-eras/` |
+| How to Read a Japanese Address | `/guides/japanese-addresses/` |
+| Understanding the HSP Points System | `/guides/hsp-points/` |
+
 ## Local development
 
 ```bash
@@ -35,8 +45,11 @@ japan-toolkit/
 ├── src/
 │   ├── shared/
 │   │   ├── style.css          # shared stylesheet
-│   │   └── nav.ts             # nav component
+│   │   ├── nav.ts             # nav component
+│   │   ├── footer.ts          # footer component
+│   │   └── clipboard.ts       # copy-button helper
 │   ├── home.ts                # landing page entry
+│   ├── guides/main.ts         # shared entry for all guide pages
 │   ├── date-converter/
 │   │   ├── era-logic.ts       # pure conversion logic (no DOM)
 │   │   └── main.ts            # DOM entry point
@@ -50,6 +63,10 @@ japan-toolkit/
 ├── postal-lookup/index.html
 ├── pr-calculator/index.html
 ├── privacy-policy/index.html
+├── guides/index.html          # guides landing page
+├── guides/japanese-eras/index.html
+├── guides/japanese-addresses/index.html
+├── guides/hsp-points/index.html
 ├── index.html
 ├── vite.config.ts
 └── .github/workflows/deploy.yml
@@ -63,7 +80,7 @@ japan-toolkit/
 
 The `base: '/japan-toolkit/'` in `vite.config.ts` matches the project-page URL `https://guru-ng.github.io/japan-toolkit/`.
 
-> **Note for Netlify:** if this same repo is also deployed to Netlify and served from a root domain (not a `/japan-toolkit/` subpath), the `base: '/japan-toolkit/'` setting will make all built asset paths 404, because Vite prefixes every script/CSS path with `/japan-toolkit/`. If that's happening, the fix is to make `base` conditional, e.g. `base: process.env.DEPLOY_TARGET === 'netlify' ? '/' : '/japan-toolkit/'`, and set `DEPLOY_TARGET=netlify` in the Netlify build environment. This hasn't been changed yet — confirm before applying so it doesn't break the GitHub Pages build.
+> **Note for Netlify:** Netlify serves from a root domain (not a `/japan-toolkit/` subpath), so a fixed `base: '/japan-toolkit/'` would make all built asset paths 404 there. `vite.config.ts` now sets `base` conditionally: `process.env.DEPLOY_TARGET === 'netlify' ? '/' : '/japan-toolkit/'`. When re-enabling Netlify, set the environment variable `DEPLOY_TARGET=netlify` in **Site settings → Build & deploy → Environment** — no other change is needed, and GitHub Pages builds are unaffected.
 
 ## Managing Netlify usage
 

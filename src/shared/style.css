@@ -590,6 +590,11 @@ button {
   text-decoration: underline;
 }
 
+.footer-links {
+  display: inline-flex;
+  gap: 1rem;
+}
+
 .footer-inner a:hover {
   color: var(--color-accent);
 }
@@ -615,5 +620,187 @@ button {
     padding: 1.25rem 1rem;
     justify-content: center;
     text-align: center;
+  }
+}
+
+/* ── Decorative palette (illustration / accent colors) ──
+   Flat-vector palette that complements the terracotta accent on cream. */
+:root {
+  --color-teal: #2a9d8f;
+  --color-mustard: #e0a82e;
+  --color-pink: #e8918c;
+  --color-sage: #8ab17d;
+}
+
+/* ── Guide / article prose ── */
+.guide-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+  background: var(--color-accent-light);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.guide-kicker .material-symbols-outlined {
+  font-size: 1rem;
+}
+
+.prose p,
+.prose ul,
+.prose table {
+  margin-bottom: 1rem;
+  line-height: 1.65;
+  font-size: 0.9375rem;
+}
+
+.prose h2 {
+  margin-top: 1.75rem;
+  padding-top: 0.25rem;
+}
+
+.prose h2:first-child {
+  margin-top: 0;
+}
+
+/* Small brush-stroke underline under article section headings */
+.prose h2::after {
+  content: '';
+  display: block;
+  width: 2.25rem;
+  height: 3px;
+  border-radius: 2px;
+  margin-top: 0.375rem;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-mustard));
+}
+
+.prose ul {
+  padding-left: 1.25rem;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.prose th,
+.prose td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.prose th {
+  font-weight: 600;
+  background: var(--color-bg);
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+.guide-cta {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  border-left: 4px solid var(--color-accent);
+  background: var(--color-accent-light);
+}
+
+.guide-cta .material-symbols-outlined {
+  color: var(--color-accent);
+  margin-top: 0.1rem;
+}
+
+.guide-cta a {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.guide-disclaimer {
+  margin-top: 1.25rem;
+  font-size: 0.8125rem !important;
+  color: var(--color-text-muted);
+}
+
+/* ── Tool/guide card accent variants ──
+   Colored top strips + tinted icons so card grids read as a playful set
+   rather than three identical white boxes. */
+.tool-card {
+  border-top: 3px solid var(--color-accent);
+}
+
+.tool-card.accent-teal { border-top-color: var(--color-teal); }
+.tool-card.accent-teal .tool-icon { background: #e4f2f0; color: var(--color-teal); }
+
+.tool-card.accent-mustard { border-top-color: var(--color-mustard); }
+.tool-card.accent-mustard .tool-icon { background: #faf1dc; color: #b5821c; }
+
+.tool-card.accent-pink { border-top-color: var(--color-pink); }
+.tool-card.accent-pink .tool-icon { background: #fbeae9; color: #c25750; }
+
+/* Homepage guide-links list */
+.guide-links {
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.guide-links li {
+  color: var(--color-text-muted);
+}
+
+.guide-links a {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.guide-links a:hover {
+  text-decoration: underline;
+}
+
+/* ── Homepage hero banner (inline flat-vector SVG) ── */
+.hero {
+  position: relative;
+  margin: 0.5rem 0 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: linear-gradient(180deg, #fdfbf7 0%, #f6efe4 100%);
+  box-shadow: var(--shadow);
+}
+
+.hero svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 600px) {
+  .hero {
+    margin-top: 0.25rem;
   }
 }

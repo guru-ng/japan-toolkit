@@ -6,7 +6,10 @@ export function renderFooter(): void {
   footer.innerHTML = `
     <div class="footer-inner">
       <span>&copy; ${new Date().getFullYear()} Japan Toolkit</span>
-      <a href="${BASE}privacy-policy/">Privacy Policy</a>
+      <span class="footer-links">
+        <a href="${BASE}guides/">Guides</a>
+        <a href="${BASE}privacy-policy/">Privacy Policy</a>
+      </span>
     </div>
   `
   document.body.append(footer)
